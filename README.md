@@ -1,4 +1,4 @@
-# CTRLZ-BarberShop
+# CTRLZ-Barbershop
 
 
 
