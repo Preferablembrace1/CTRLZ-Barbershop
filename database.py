@@ -38,7 +38,7 @@ def create_table():
         CREATE TABLE IF NOT EXISTS cortes (
             id INTEGER PRIMARY KEY AUTOINCREMENT,
             nombre TEXT NOT NULL UNIQUE,
-            precio TEXT NOT NULL
+            precio REAL NOT NULL
         )
     """)
 
@@ -51,7 +51,7 @@ def create_table():
             corte_id INTEGER NOT NULL,
             fecha TEXT NOT NULL,
             hora TEXT NOT NULL,
-            estado TEXT NOT NULL DEFAULT 'pendiente',
+            estado TEXT NOT NULL CHECK (estado IN ('pendiente', 'confirmada', 'cancelada')),
             FOREIGN KEY (cliente_id) REFERENCES clientes(id),
             FOREIGN KEY (barbero_id) REFERENCES barberos(id),
             FOREIGN KEY (corte_id) REFERENCES cortes(id) 
@@ -143,7 +143,7 @@ def add_corte(nombre, precio):
     conn = connect_DB()
     cursor = conn.cursor()
     try:
-        cursor.execute("INSERT INTO cortes (nombre, precio) VALUES (?, ?)", (nombre, precio))    
+        cursor.execute("INSERT INTO cortes (nombre, precio) VALUES (?, ?)", (nombre, float(precio)))    
         conn.commit()
         id_corte = cursor.lastrowid
         print(f"Corte {nombre} registrado con éxito, ID: {id_corte}")
@@ -163,7 +163,7 @@ def get_cortes():
         cursor.execute("SELECT * FROM cortes")
         cortes = cursor.fetchall()
         conn.close()
-        return cortes  # Lista de tuplas: [(1, 'Corte Clásico', '100'), ...]
+        return cortes  # Lista de tuplas: [(1, 'Corte Clásico', 100.0), ...]
     except sqlite3.Error as e:
         print(f"Error al obtener los cortes: {e}")
         conn.close()
@@ -174,7 +174,7 @@ def update_corte(id_corte, nombre, precio):
     conn = connect_DB()
     cursor = conn.cursor()
     try:
-        cursor.execute("UPDATE cortes SET nombre=?, precio=? WHERE id=?", (nombre, precio, id_corte))
+        cursor.execute("UPDATE cortes SET nombre=?, precio=? WHERE id=?", (nombre, float(precio), id_corte))
         conn.commit()
         actualizados = cursor.rowcount # Número de filas actualizadas
         conn.close()
@@ -342,3 +342,17 @@ def complete_cita(id_cita):
         conn.rollback()
         conn.close()
         return False, str(e)
+
+def get_available_horarios(id_barbero, fecha):
+    """Obtener los horarios disponibles para un barbero en una fecha específica"""
+    conn = connect_DB()
+    cursor = conn.cursor()
+    try:
+        cursor.execute("SELECT hora FROM citas WHERE barbero_id = ? AND fecha = ? AND estado = 'pendiente'", (id_barbero, fecha))
+        horarios = cursor.fetchall()
+        conn.close()
+        return [hora[0] for hora in horarios]  # Convertir tuplas a lista de strings
+    except sqlite3.Error as e:
+        print(f"Error al obtener los horarios disponibles: {e}")
+        conn.close()
+        return []
