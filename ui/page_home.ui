@@ -104,7 +104,7 @@
        <item>
         <widget class="QPushButton" name="btnAdmin">
          <property name="text">
-          <string>Admin (Próximamente)</string>
+          <string>🔐 Panel Admin</string>
          </property>
          <property name="cssClass">
           <string>btnSecondary</string>

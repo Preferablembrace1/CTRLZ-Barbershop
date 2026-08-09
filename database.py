@@ -375,3 +375,64 @@ def get_cita_by_id(id_cita):
         print(f"Error al obtener la cita: {e}")
         conn.close()
         return None
+
+def get_all_citas():
+    """Obtener todas las citas con detalle completo (Admin)"""
+    conn = connect_DB()
+    cursor = conn.cursor()
+    try:
+        cursor.execute("""SELECT c.id_cita, cl.nombre as cliente, b.nombre as barbero, 
+                          cr.nombre as corte, c.fecha, c.hora, c.estado, cr.precio 
+                          FROM citas c 
+                          JOIN clientes cl ON c.cliente_id = cl.id 
+                          JOIN barberos b ON c.barbero_id = b.id 
+                          JOIN cortes cr ON c.corte_id = cr.id 
+                          ORDER BY c.fecha DESC, c.hora ASC""")
+        citas = cursor.fetchall()
+        conn.close()
+        return citas
+    except sqlite3.Error as e:
+        print(f"Error al obtener las citas: {e}")
+        conn.close()
+        return []
+
+def confirm_cita(id_cita):
+    """Confirmar una cita pendiente (Admin)"""
+    conn = connect_DB()
+    cursor = conn.cursor()
+    try:
+        cursor.execute("SELECT estado FROM citas WHERE id_cita=?", (id_cita,))
+        estado = cursor.fetchone()
+        if not estado or estado[0] != 'pendiente':
+            conn.close()
+            return False, "Solo se puede confirmar citas pendientes"
+        cursor.execute("UPDATE citas SET estado = 'confirmada' WHERE id_cita=?", (id_cita,))
+        conn.commit()
+        actualizados = cursor.rowcount
+        conn.close()
+        if actualizados > 0:
+            return True, f"Cita {id_cita} confirmada con éxito"
+        return False, f"Cita {id_cita} no encontrada"
+    except sqlite3.Error as e:
+        print(f"Error al confirmar la cita: {e}")
+        conn.rollback()
+        conn.close()
+        return False, str(e)
+
+def get_all_cortes_with_barbero():
+    """Obtener todos los cortes con el nombre del barbero asociado"""
+    conn = connect_DB()
+    cursor = conn.cursor()
+    try:
+        cursor.execute("""SELECT c.id, c.nombre, c.precio, 
+                          COALESCE(b.nombre, 'Genérico') as barbero
+                          FROM cortes c 
+                          LEFT JOIN barberos b ON c.barbero_id = b.id 
+                          ORDER BY c.id""")
+        cortes = cursor.fetchall()
+        conn.close()
+        return cortes
+    except sqlite3.Error as e:
+        print(f"Error al obtener los cortes: {e}")
+        conn.close()
+        return []

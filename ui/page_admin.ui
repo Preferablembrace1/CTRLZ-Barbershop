@@ -1,0 +1,239 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui version="4.0">
+ <class>PageAdmin</class>
+ <widget class="QWidget" name="PageAdmin">
+  <layout class="QVBoxLayout" name="verticalLayout">
+   <property name="leftMargin"><number>40</number></property>
+   <property name="topMargin"><number>30</number></property>
+   <property name="rightMargin"><number>40</number></property>
+   <property name="bottomMargin"><number>20</number></property>
+   <property name="spacing"><number>12</number></property>
+   <!-- Encabezado -->
+   <item>
+    <widget class="QLabel" name="stepLabel">
+     <property name="text"><string>Panel de Administración</string></property>
+    </widget>
+   </item>
+   <item>
+    <widget class="QLabel" name="titleLabel">
+     <property name="text"><string>Gestión del negocio</string></property>
+    </widget>
+   </item>
+   <!-- Botones de pestañas -->
+   <item>
+    <layout class="QHBoxLayout" name="layoutTabs">
+     <property name="spacing"><number>10</number></property>
+     <item>
+      <widget class="QPushButton" name="btnTabCitas">
+       <property name="text"><string>📋 Gestión de Citas</string></property>
+       <property name="minimumSize"><size><width>0</width><height>44</height></size></property>
+      </widget>
+     </item>
+     <item>
+      <widget class="QPushButton" name="btnTabGestion">
+       <property name="text"><string>✂️ Barberos y Cortes</string></property>
+       <property name="minimumSize"><size><width>0</width><height>44</height></size></property>
+      </widget>
+     </item>
+    </layout>
+   </item>
+   <!-- Contenido principal (stacked widget) -->
+   <item>
+    <widget class="QStackedWidget" name="adminStackedWidget">
+     <property name="currentIndex"><number>0</number></property>
+     <!-- Página 0: Gestión de Citas -->
+     <widget class="QWidget" name="pageCitas">
+      <layout class="QVBoxLayout" name="layoutPageCitas">
+       <property name="spacing"><number>10</number></property>
+       <!-- Fila superior: Calendario + controles -->
+       <item>
+        <layout class="QHBoxLayout" name="layoutCalendarRow">
+         <property name="spacing"><number>12</number></property>
+         <item>
+          <widget class="QCalendarWidget" name="adminCalendar">
+           <property name="minimumSize"><size><width>380</width><height>280</height></size></property>
+           <property name="maximumSize"><size><width>450</width><height>320</height></size></property>
+           <property name="verticalHeaderFormat"><enum>QCalendarWidget::NoVerticalHeader</enum></property>
+           <property name="gridVisible"><bool>false</bool></property>
+          </widget>
+         </item>
+         <item>
+          <layout class="QVBoxLayout" name="layoutCalendarInfo">
+           <property name="spacing"><number>8</number></property>
+           <item>
+            <widget class="QLabel" name="lblCalendarInfo">
+             <property name="text"><string>Selecciona una fecha para filtrar las citas</string></property>
+             <property name="wordWrap"><bool>true</bool></property>
+             <property name="alignment"><set>Qt::AlignTop</set></property>
+             <property name="styleSheet"><string>color: #6B7280; font-size: 13px; padding: 8px;</string></property>
+            </widget>
+           </item>
+           <item>
+            <widget class="QPushButton" name="btnVerPendientes">
+             <property name="text"><string>⏳ Ver Todas las Pendientes</string></property>
+             <property name="minimumSize"><size><width>0</width><height>40</height></size></property>
+             <property name="cssClass" stdset="0"><string>btnAction</string></property>
+            </widget>
+           </item>
+           <item>
+            <widget class="QPushButton" name="btnVerTodas">
+             <property name="text"><string>📋 Ver Todas las Citas</string></property>
+             <property name="minimumSize"><size><width>0</width><height>40</height></size></property>
+             <property name="cssClass" stdset="0"><string>btnSecondary</string></property>
+            </widget>
+           </item>
+           <item>
+            <spacer name="spacerCalendarInfo">
+             <property name="orientation"><enum>Qt::Vertical</enum></property>
+            </spacer>
+           </item>
+          </layout>
+         </item>
+        </layout>
+       </item>
+       <!-- Lista de citas -->
+       <item>
+        <widget class="QLabel" name="lblCitasHeader">
+         <property name="text"><string>Citas</string></property>
+         <property name="styleSheet"><string>font-size: 16px; font-weight: bold; color: #1E1E2E; padding: 4px 0px;</string></property>
+        </widget>
+       </item>
+       <item>
+        <widget class="QScrollArea" name="scrollAreaCitas">
+         <property name="widgetResizable"><bool>true</bool></property>
+         <widget class="QWidget" name="scrollContentCitas">
+          <layout class="QVBoxLayout" name="layoutAdminCitas">
+           <property name="spacing"><number>8</number></property>
+           <property name="alignment">
+            <set>Qt::AlignTop</set>
+           </property>
+          </layout>
+         </widget>
+        </widget>
+       </item>
+      </layout>
+     </widget>
+     <!-- Página 1: Gestión de Barberos y Cortes -->
+     <widget class="QWidget" name="pageGestion">
+      <layout class="QHBoxLayout" name="layoutPageGestion">
+       <property name="spacing"><number>20</number></property>
+       <!-- Mitad izquierda: Barberos -->
+       <item>
+        <layout class="QVBoxLayout" name="layoutBarberosSection">
+         <property name="spacing"><number>8</number></property>
+         <item>
+          <widget class="QLabel" name="lblBarberosTitle">
+           <property name="text"><string>Barberos</string></property>
+          </widget>
+         </item>
+         <item>
+          <widget class="QLineEdit" name="txtBarberoNombre">
+           <property name="placeholderText"><string>Nombre del barbero</string></property>
+          </widget>
+         </item>
+         <item>
+          <widget class="QLineEdit" name="txtBarberoEmail">
+           <property name="placeholderText"><string>email@ejemplo.com</string></property>
+          </widget>
+         </item>
+         <item>
+          <widget class="QLineEdit" name="txtBarberoEspecialidad">
+           <property name="placeholderText"><string>Especialidad / Servicios</string></property>
+          </widget>
+         </item>
+         <item>
+          <widget class="QPushButton" name="btnAddBarbero">
+           <property name="text"><string>+ Agregar Barbero</string></property>
+           <property name="cssClass" stdset="0"><string>btnAction</string></property>
+           <property name="minimumSize"><size><width>0</width><height>40</height></size></property>
+          </widget>
+         </item>
+         <item>
+          <widget class="QScrollArea" name="scrollAreaBarberos">
+           <property name="widgetResizable"><bool>true</bool></property>
+           <widget class="QWidget" name="scrollContentBarberos">
+            <layout class="QVBoxLayout" name="layoutBarberosList">
+             <property name="spacing"><number>6</number></property>
+             <property name="alignment">
+              <set>Qt::AlignTop</set>
+             </property>
+            </layout>
+           </widget>
+          </widget>
+         </item>
+        </layout>
+       </item>
+       <!-- Separador visual -->
+       <item>
+        <widget class="QFrame" name="separator">
+         <property name="frameShape"><enum>QFrame::VLine</enum></property>
+         <property name="frameShadow"><enum>QFrame::Sunken</enum></property>
+         <property name="styleSheet"><string>color: #E2D8CD;</string></property>
+        </widget>
+       </item>
+       <!-- Mitad derecha: Cortes -->
+       <item>
+        <layout class="QVBoxLayout" name="layoutCortesSection">
+         <property name="spacing"><number>8</number></property>
+         <item>
+          <widget class="QLabel" name="lblCortesTitle">
+           <property name="text"><string>Cortes</string></property>
+          </widget>
+         </item>
+         <item>
+          <widget class="QLineEdit" name="txtCorteNombre">
+           <property name="placeholderText"><string>Nombre del corte</string></property>
+          </widget>
+         </item>
+         <item>
+          <widget class="QLineEdit" name="txtCortePrecio">
+           <property name="placeholderText"><string>Precio (RD$)</string></property>
+          </widget>
+         </item>
+         <item>
+          <widget class="QComboBox" name="cmbCorteBarbero"/>
+         </item>
+         <item>
+          <widget class="QPushButton" name="btnAddCorte">
+           <property name="text"><string>+ Agregar Corte</string></property>
+           <property name="cssClass" stdset="0"><string>btnAction</string></property>
+           <property name="minimumSize"><size><width>0</width><height>40</height></size></property>
+          </widget>
+         </item>
+         <item>
+          <widget class="QScrollArea" name="scrollAreaCortes">
+           <property name="widgetResizable"><bool>true</bool></property>
+           <widget class="QWidget" name="scrollContentCortes">
+            <layout class="QVBoxLayout" name="layoutCortesList">
+             <property name="spacing"><number>6</number></property>
+             <property name="alignment">
+              <set>Qt::AlignTop</set>
+             </property>
+            </layout>
+           </widget>
+          </widget>
+         </item>
+        </layout>
+       </item>
+      </layout>
+     </widget>
+    </widget>
+   </item>
+   <!-- Pie: botón Volver -->
+   <item>
+    <layout class="QHBoxLayout" name="layoutBottom">
+     <item>
+      <widget class="QPushButton" name="btnBack">
+       <property name="text"><string>← Volver al Inicio</string></property>
+      </widget>
+     </item>
+     <item>
+      <spacer name="spacerBottom">
+       <property name="orientation"><enum>Qt::Horizontal</enum></property>
+      </spacer>
+     </item>
+    </layout>
+   </item>
+  </layout>
+ </widget>
+</ui>
