@@ -356,3 +356,17 @@ def get_available_horarios(id_barbero, fecha):
         print(f"Error al obtener los horarios disponibles: {e}")
         conn.close()
         return []
+
+def get_cita_by_id(id_cita):
+    """Obtener detalle de una cita específica por su ID"""
+    conn = connect_DB()
+    cursor = conn.cursor()
+    try:
+        cursor.execute("SELECT c.id_cita, cl.nombre as cliente, b.nombre as barbero, cr.nombre as corte, c.fecha, c.hora, c.estado, cr.precio FROM citas c JOIN clientes cl ON c.cliente_id = cl.id JOIN barberos b ON c.barbero_id = b.id JOIN cortes cr ON c.corte_id = cr.id WHERE c.id_cita = ?", (id_cita,))
+        cita = cursor.fetchone()
+        conn.close()
+        return cita
+    except sqlite3.Error as e:
+        print(f"Error al obtener la cita: {e}")
+        conn.close()
+        return None

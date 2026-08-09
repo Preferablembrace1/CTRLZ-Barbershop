@@ -1,0 +1,101 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui version="4.0">
+ <class>PageResumen</class>
+ <widget class="QWidget" name="PageResumen">
+  <layout class="QVBoxLayout" name="verticalLayout">
+   <property name="leftMargin"><number>40</number></property>
+   <property name="topMargin"><number>40</number></property>
+   <property name="rightMargin"><number>40</number></property>
+   <property name="bottomMargin"><number>40</number></property>
+   <item>
+    <widget class="QLabel" name="stepLabel">
+     <property name="text">
+      <string>Paso 5 de 5 • Resumen</string>
+     </property>
+    </widget>
+   </item>
+   <item>
+    <widget class="QLabel" name="titleLabel">
+     <property name="text">
+      <string>Resumen de tu cita</string>
+     </property>
+    </widget>
+   </item>
+   <item>
+    <spacer name="verticalSpacer_1">
+     <property name="orientation">
+      <enum>Qt::Vertical</enum>
+     </property>
+     <property name="sizeType">
+      <enum>QSizePolicy::Fixed</enum>
+     </property>
+     <property name="sizeHint">
+      <size><width>20</width><height>20</height></size>
+     </property>
+    </spacer>
+   </item>
+   <item>
+    <widget class="QFrame" name="frameResumen">
+     <property name="frameShape">
+      <enum>QFrame::StyledPanel</enum>
+     </property>
+     <property name="styleSheet">
+      <string>QFrame { background-color: #FFFFFF; border: 1px solid #E2D8CD; border-radius: 12px; padding: 20px; }</string>
+     </property>
+     <layout class="QVBoxLayout" name="verticalLayout_3">
+      <item>
+       <widget class="QLabel" name="lblResumenNombre">
+        <property name="text"><string>Cliente: </string></property>
+       </widget>
+      </item>
+      <item>
+       <widget class="QLabel" name="lblResumenBarbero">
+        <property name="text"><string>Barbero: </string></property>
+       </widget>
+      </item>
+      <item>
+       <widget class="QLabel" name="lblResumenCorte">
+        <property name="text"><string>Corte: </string></property>
+       </widget>
+      </item>
+      <item>
+       <widget class="QLabel" name="lblResumenPrecio">
+        <property name="text"><string>Precio: </string></property>
+       </widget>
+      </item>
+      <item>
+       <widget class="QLabel" name="lblResumenFecha">
+        <property name="text"><string>Fecha: </string></property>
+       </widget>
+      </item>
+     </layout>
+    </widget>
+   </item>
+   <item>
+    <spacer name="verticalSpacer_2">
+     <property name="orientation">
+      <enum>Qt::Vertical</enum>
+     </property>
+    </spacer>
+   </item>
+   <item>
+    <layout class="QHBoxLayout" name="horizontalLayout">
+     <item>
+      <widget class="QPushButton" name="btnBack">
+       <property name="text"><string>Volver</string></property>
+      </widget>
+     </item>
+     <item>
+      <spacer name="horizontalSpacer"><property name="orientation"><enum>Qt::Horizontal</enum></property></spacer>
+     </item>
+     <item>
+      <widget class="QPushButton" name="btnConfirmar">
+       <property name="text"><string>Generar Cita</string></property>
+       <property name="cssClass"><string>btnAction</string></property>
+      </widget>
+     </item>
+    </layout>
+   </item>
+  </layout>
+ </widget>
+</ui>
