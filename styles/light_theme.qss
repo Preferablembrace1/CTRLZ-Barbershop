@@ -4,8 +4,16 @@ QMainWindow {
     background-color: #FAF7F2;
 }
 
+QDialog, QMessageBox {
+    background-color: #FAF7F2;
+}
+
 QWidget {
     font-family: "Segoe UI", Arial, sans-serif;
+    color: #1E1E2E;
+}
+
+QMessageBox QLabel {
     color: #1E1E2E;
 }
 
@@ -61,6 +69,12 @@ QPushButton:hover {
 
 QPushButton:pressed {
     background-color: #1E2532;
+}
+
+QPushButton:checked {
+    background-color: #C8956C;
+    color: #FFFFFF;
+    border: 2px solid #C8956C;
 }
 
 QPushButton:disabled {

@@ -203,7 +203,8 @@ class MainWindow(QMainWindow):
         self.appointment_data["barbero_nombre"] = b_name
         
         for card in self.barbero_cards:
-            card.setProperty("selected", card == selectedCard)
+            is_selected = "true" if card == selectedCard else "false"
+            card.setProperty("selected", is_selected)
             card.style().unpolish(card)
             card.style().polish(card)
             
@@ -213,7 +214,8 @@ class MainWindow(QMainWindow):
         layout = self.page_corte.gridLayoutCards
         self.clear_layout(layout)
         
-        cortes = database.get_cortes()
+        # Filtrar cortes por el barbero seleccionado (o genéricos)
+        cortes = database.get_cortes(self.appointment_data["id_barbero"])
         self.corte_cards = []
         
         row, col = 0, 0
@@ -252,7 +254,8 @@ class MainWindow(QMainWindow):
         self.appointment_data["corte_precio"] = float(c_precio)
         
         for card in self.corte_cards:
-            card.setProperty("selected", card == selectedCard)
+            is_selected = "true" if card == selectedCard else "false"
+            card.setProperty("selected", is_selected)
             card.style().unpolish(card)
             card.style().polish(card)
             

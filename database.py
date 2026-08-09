@@ -37,8 +37,10 @@ def create_table():
     cursor.execute("""
         CREATE TABLE IF NOT EXISTS cortes (
             id INTEGER PRIMARY KEY AUTOINCREMENT,
-            nombre TEXT NOT NULL UNIQUE,
-            precio REAL NOT NULL
+            barbero_id INTEGER,
+            nombre TEXT NOT NULL,
+            precio REAL NOT NULL,
+            FOREIGN KEY (barbero_id) REFERENCES barberos(id)
         )
     """)
 
@@ -138,12 +140,12 @@ def delete_barbero(id_barbero):
         conn.close()
         return None
 
-def add_corte(nombre, precio):
-    """Registrar un corte"""
+def add_corte(nombre, precio, barbero_id=None):
+    """Añadir un nuevo tipo de corte"""
     conn = connect_DB()
     cursor = conn.cursor()
     try:
-        cursor.execute("INSERT INTO cortes (nombre, precio) VALUES (?, ?)", (nombre, float(precio)))    
+        cursor.execute("INSERT INTO cortes (nombre, precio, barbero_id) VALUES (?, ?, ?)", (nombre, precio, barbero_id))
         conn.commit()
         id_corte = cursor.lastrowid
         print(f"Corte {nombre} registrado con éxito, ID: {id_corte}")
@@ -155,12 +157,15 @@ def add_corte(nombre, precio):
         conn.close()
         return None
 
-def get_cortes():
-    """Obtener todos los cortes disponibles"""
+def get_cortes(barbero_id=None):
+    """Obtener todos los cortes o los cortes de un barbero específico"""
     conn = connect_DB()
     cursor = conn.cursor()
     try:
-        cursor.execute("SELECT * FROM cortes")
+        if barbero_id:
+            cursor.execute("SELECT id, nombre, precio FROM cortes WHERE barbero_id = ? OR barbero_id IS NULL", (barbero_id,))
+        else:
+            cursor.execute("SELECT id, nombre, precio FROM cortes")
         cortes = cursor.fetchall()
         conn.close()
         return cortes  # Lista de tuplas: [(1, 'Corte Clásico', 100.0), ...]

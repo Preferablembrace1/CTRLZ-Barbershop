@@ -22,16 +22,28 @@ def seed():
 
     # Sembrar cortes de prueba
     if not get_cortes():
-        cortes = [
+        # Cortes genéricos (sin barbero_id)
+        genericos = [
             ("Corte Clásico", 300),
             ("Degradado (Fade)", 400),
-            ("Corte + Barba", 500),
-            ("Diseño con Líneas", 600),
-            ("Afeitado Completo", 350),
             ("Corte Infantil", 250),
         ]
-        for nombre, precio in cortes:
+        for nombre, precio in genericos:
             add_corte(nombre, precio)
+            
+        # Cortes específicos por barbero (1: Chino, 2: Tigre, 3: Yordy, 4: Flaco)
+        especificos = [
+            ("Corte con barba + mascarilla de puntos negros", 1000, 1), # Chino
+            ("Diseño con Líneas (Tribal)", 600, 2), # Tigre
+            ("Barba", 300, 3), # Yordy
+            ("Cerquillo", 300, 3),
+            ("Cerquillo + barba", 400, 3),
+            ("Cerquillo + barba + taper (blowout)", 500, 3),
+            ("Corte Moderno Asimétrico", 700, 4), # Flaco
+        ]
+        for nombre, precio, b_id in especificos:
+            add_corte(nombre, precio, barbero_id=b_id)
+            
         print("Cortes de prueba insertados.")
 
 
