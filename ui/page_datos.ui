@@ -1,0 +1,107 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui version="4.0">
+ <class>PageDatos</class>
+ <widget class="QWidget" name="PageDatos">
+  <layout class="QVBoxLayout" name="verticalLayout">
+   <property name="leftMargin"><number>40</number></property>
+   <property name="topMargin"><number>40</number></property>
+   <property name="rightMargin"><number>40</number></property>
+   <property name="bottomMargin"><number>40</number></property>
+   <item>
+    <widget class="QLabel" name="stepLabel">
+     <property name="text">
+      <string>Paso 1 de 5 • Tus Datos</string>
+     </property>
+    </widget>
+   </item>
+   <item>
+    <widget class="QLabel" name="titleLabel">
+     <property name="text">
+      <string>Ingresa tus datos personales</string>
+     </property>
+    </widget>
+   </item>
+   <item>
+    <spacer name="verticalSpacer_1">
+     <property name="orientation">
+      <enum>Qt::Vertical</enum>
+     </property>
+     <property name="sizeType">
+      <enum>QSizePolicy::Fixed</enum>
+     </property>
+     <property name="sizeHint">
+      <size>
+       <width>20</width>
+       <height>20</height>
+      </size>
+     </property>
+    </spacer>
+   </item>
+   <item>
+    <layout class="QVBoxLayout" name="formLayout">
+     <item>
+      <widget class="QLabel" name="labelNombre">
+       <property name="text"><string>Nombre / Apodo</string></property>
+      </widget>
+     </item>
+     <item>
+      <widget class="QLineEdit" name="txtNombre">
+       <property name="placeholderText"><string>Ej. Algenis</string></property>
+      </widget>
+     </item>
+     <item>
+      <spacer name="verticalSpacer_2"><property name="orientation"><enum>Qt::Vertical</enum></property><property name="sizeType"><enum>QSizePolicy::Fixed</enum></property><property name="sizeHint"><size><width>20</width><height>10</height></size></property></spacer>
+     </item>
+     <item>
+      <widget class="QLabel" name="labelTelefono">
+       <property name="text"><string>Teléfono</string></property>
+      </widget>
+     </item>
+     <item>
+      <widget class="QLineEdit" name="txtTelefono">
+       <property name="placeholderText"><string>+1 809 555 0000</string></property>
+      </widget>
+     </item>
+     <item>
+      <spacer name="verticalSpacer_3"><property name="orientation"><enum>Qt::Vertical</enum></property><property name="sizeType"><enum>QSizePolicy::Fixed</enum></property><property name="sizeHint"><size><width>20</width><height>10</height></size></property></spacer>
+     </item>
+     <item>
+      <widget class="QLabel" name="labelCorreo">
+       <property name="text"><string>Correo Electrónico</string></property>
+      </widget>
+     </item>
+     <item>
+      <widget class="QLineEdit" name="txtCorreo">
+       <property name="placeholderText"><string>tu@email.com</string></property>
+      </widget>
+     </item>
+    </layout>
+   </item>
+   <item>
+    <spacer name="verticalSpacer_4">
+     <property name="orientation">
+      <enum>Qt::Vertical</enum>
+     </property>
+    </spacer>
+   </item>
+   <item>
+    <layout class="QHBoxLayout" name="horizontalLayout">
+     <item>
+      <widget class="QPushButton" name="btnBack">
+       <property name="text"><string>Volver</string></property>
+      </widget>
+     </item>
+     <item>
+      <spacer name="horizontalSpacer"><property name="orientation"><enum>Qt::Horizontal</enum></property></spacer>
+     </item>
+     <item>
+      <widget class="QPushButton" name="btnNext">
+       <property name="text"><string>Siguiente &gt;</string></property>
+       <property name="cssClass"><string>btnAction</string></property>
+      </widget>
+     </item>
+    </layout>
+   </item>
+  </layout>
+ </widget>
+</ui>

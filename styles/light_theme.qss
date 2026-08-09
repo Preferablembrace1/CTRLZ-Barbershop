@@ -1,0 +1,162 @@
+/* CTRLZ Barbershop - Light Theme */
+
+QMainWindow {
+    background-color: #FAF7F2;
+}
+
+QDialog, QMessageBox {
+    background-color: #FAF7F2;
+}
+
+QWidget {
+    font-family: "Segoe UI", Arial, sans-serif;
+    color: #1E1E2E;
+}
+
+QMessageBox QLabel {
+    color: #1E1E2E;
+}
+
+/* Titles and Headers */
+QLabel#titleLabel {
+    font-size: 28px;
+    font-weight: bold;
+    color: #1E1E2E;
+    letter-spacing: 1px;
+}
+
+QLabel#subtitleLabel {
+    font-size: 16px;
+    color: #6B7280;
+}
+
+QLabel#stepLabel {
+    font-size: 14px;
+    color: #9CA3AF;
+    font-weight: bold;
+    text-transform: uppercase;
+}
+
+/* Inputs */
+QLineEdit, QComboBox, QDateEdit {
+    background-color: #FFFFFF;
+    border: 1px solid #E2D8CD;
+    border-radius: 8px;
+    padding: 10px 14px;
+    font-size: 15px;
+    color: #1E1E2E;
+}
+
+QLineEdit:focus, QComboBox:focus, QDateEdit:focus {
+    border: 1px solid #C8956C;
+    background-color: #FFFBF5;
+}
+
+/* Buttons */
+QPushButton {
+    background-color: #2D3748;
+    color: #FFFFFF;
+    border: none;
+    border-radius: 8px;
+    padding: 12px 20px;
+    font-size: 15px;
+    font-weight: bold;
+}
+
+QPushButton:hover {
+    background-color: #3A465C;
+}
+
+QPushButton:pressed {
+    background-color: #1E2532;
+}
+
+QPushButton:checked {
+    background-color: #C8956C;
+    color: #FFFFFF;
+    border: 2px solid #C8956C;
+}
+
+QPushButton:disabled {
+    background-color: #D1D5DB;
+    color: #9CA3AF;
+}
+
+/* Secondary Button (Back, Cancel) */
+QPushButton[cssClass="btnSecondary"], QPushButton#btnBack {
+    background-color: transparent;
+    color: #6B7280;
+    border: 1px solid #E2D8CD;
+}
+
+QPushButton[cssClass="btnSecondary"]:hover, QPushButton#btnBack:hover {
+    background-color: #F5F0EB;
+    color: #1E1E2E;
+}
+
+/* Action Button (Primary) */
+QPushButton[cssClass="btnAction"] {
+    background-color: #C8956C;
+    color: #FFFFFF;
+}
+
+QPushButton[cssClass="btnAction"]:hover {
+    background-color: #D6A47C;
+}
+
+/* Cards (Barber, Cuts) */
+QWidget.CardWidget {
+    background-color: #FFFFFF;
+    border: 1px solid #E2D8CD;
+    border-radius: 12px;
+}
+
+QWidget.CardWidget:hover {
+    border: 1px solid #C8956C;
+    background-color: #FFFBF5;
+}
+
+QWidget[selected="true"] {
+    border: 2px solid #C8956C;
+    background-color: #FFFBF5;
+}
+
+QLabel.CardTitle {
+    font-size: 18px;
+    font-weight: bold;
+    color: #1E1E2E;
+}
+
+QLabel.CardSubtitle {
+    font-size: 14px;
+    color: #6B7280;
+}
+
+QLabel.CardPrice {
+    font-size: 16px;
+    font-weight: bold;
+    color: #C8956C;
+}
+
+/* Calendar */
+QCalendarWidget QWidget {
+    alternate-background-color: #F5F0EB;
+}
+
+QCalendarWidget QAbstractItemView:enabled {
+    color: #1E1E2E;
+    background-color: #FFFFFF;
+    selection-background-color: #C8956C;
+    selection-color: #FFFFFF;
+    border-radius: 4px;
+}
+
+/* Scroll Area */
+QScrollArea {
+    border: none;
+    background-color: transparent;
+}
+
+QScrollArea > QWidget > QWidget {
+    background-color: transparent;
+}

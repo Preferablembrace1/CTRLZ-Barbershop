@@ -1,0 +1,90 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui version="4.0">
+ <class>PageVerificar</class>
+ <widget class="QWidget" name="PageVerificar">
+  <layout class="QVBoxLayout" name="verticalLayout">
+   <property name="leftMargin"><number>60</number></property>
+   <property name="topMargin"><number>60</number></property>
+   <property name="rightMargin"><number>60</number></property>
+   <property name="bottomMargin"><number>60</number></property>
+   <item>
+    <widget class="QLabel" name="titleLabel">
+     <property name="text">
+      <string>Verificar Cita</string>
+     </property>
+     <property name="alignment">
+      <set>Qt::AlignCenter</set>
+     </property>
+    </widget>
+   </item>
+   <item>
+    <spacer name="verticalSpacer_1">
+     <property name="orientation">
+      <enum>Qt::Vertical</enum>
+     </property>
+     <property name="sizeType">
+      <enum>QSizePolicy::Fixed</enum>
+     </property>
+     <property name="sizeHint">
+      <size><width>20</width><height>20</height></size>
+     </property>
+    </spacer>
+   </item>
+   <item>
+    <layout class="QHBoxLayout" name="horizontalLayoutSearch">
+     <item>
+      <widget class="QLineEdit" name="txtCodigo">
+       <property name="placeholderText"><string>Ingresa el código de tu cita (ej. 12)</string></property>
+      </widget>
+     </item>
+     <item>
+      <widget class="QPushButton" name="btnBuscar">
+       <property name="text"><string>Buscar</string></property>
+       <property name="cssClass"><string>btnAction</string></property>
+      </widget>
+     </item>
+    </layout>
+   </item>
+   <item>
+    <widget class="QFrame" name="frameResultado">
+     <property name="frameShape">
+      <enum>QFrame::StyledPanel</enum>
+     </property>
+     <property name="styleSheet">
+      <string>QFrame { background-color: #FFFFFF; border: 1px solid #E2D8CD; border-radius: 12px; padding: 20px; }</string>
+     </property>
+     <layout class="QVBoxLayout" name="verticalLayout_3">
+      <item>
+       <widget class="QLabel" name="lblResultado">
+        <property name="text"><string>Ingresa un código para buscar.</string></property>
+        <property name="alignment"><set>Qt::AlignCenter</set></property>
+       </widget>
+      </item>
+     </layout>
+    </widget>
+   </item>
+   <item>
+    <spacer name="verticalSpacer_2">
+     <property name="orientation">
+      <enum>Qt::Vertical</enum>
+     </property>
+    </spacer>
+   </item>
+   <item>
+    <layout class="QHBoxLayout" name="horizontalLayout">
+     <item>
+      <spacer name="horizontalSpacer"><property name="orientation"><enum>Qt::Horizontal</enum></property></spacer>
+     </item>
+     <item>
+      <widget class="QPushButton" name="btnHome">
+       <property name="text"><string>Volver al Inicio</string></property>
+      </widget>
+     </item>
+     <item>
+      <spacer name="horizontalSpacer_2"><property name="orientation"><enum>Qt::Horizontal</enum></property></spacer>
+     </item>
+    </layout>
+   </item>
+  </layout>
+ </widget>
+</ui>
