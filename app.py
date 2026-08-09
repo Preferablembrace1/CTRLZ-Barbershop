@@ -3,11 +3,12 @@ import re
 from datetime import datetime, timedelta
 from PySide6.QtWidgets import (
     QMainWindow, QWidget, QVBoxLayout, QHBoxLayout, QMessageBox, QLabel, 
-    QPushButton, QFrame, QDialog, QLineEdit, QComboBox
+    QPushButton, QFrame, QDialog, QLineEdit, QComboBox, QListWidgetItem,
+    QListWidget, QListView
 )
 from PySide6.QtUiTools import QUiLoader
 from PySide6.QtCore import QFile, Qt, QDate
-from PySide6.QtGui import QTextCharFormat, QColor, QFont
+from PySide6.QtGui import QTextCharFormat, QColor, QFont, QStandardItemModel, QStandardItem
 import database
 from email_sender import send_appointment_email
 
@@ -114,6 +115,7 @@ class MainWindow(QMainWindow):
         self.page_fecha.btnNext.clicked.connect(self.go_to_resumen)
         self.page_fecha.calendarWidget.setMinimumDate(QDate.currentDate())
         self.page_fecha.calendarWidget.clicked.connect(self.update_horarios)
+        self.page_fecha.calendarWidget.selectionChanged.connect(self.color_client_calendar_dates)
         
         # --- Page Resumen ---
         self.page_resumen.btnBack.clicked.connect(lambda: self.go_to_page(4))
@@ -134,18 +136,25 @@ class MainWindow(QMainWindow):
         self.page_admin.adminCalendar.selectionChanged.connect(self.color_calendar_dates)
         self.page_admin.btnVerPendientes.clicked.connect(self.load_admin_pendientes)
         self.page_admin.btnVerTodas.clicked.connect(self.load_admin_citas)
+        self.page_admin.btnEliminarCanceladas.clicked.connect(self.admin_eliminar_canceladas)
         self.page_admin.btnAddBarbero.clicked.connect(self.admin_add_barbero)
         self.page_admin.btnAddCorte.clicked.connect(self.admin_add_corte)
 
     def go_to_page(self, index):
-        if index == 2:
+        if index == 0:
+            if self.width() > 900:
+                self.resize(800, 600)
+        elif index == 2:
             self.load_barberos()
         elif index == 3:
             self.load_cortes()
         elif index == 4:
+            self.color_client_calendar_dates()
             self.update_horarios()
             self.page_fecha.btnNext.setEnabled(False)
         elif index == 7:
+            if self.width() < 1050:
+                self.resize(1050, 750)
             self.color_calendar_dates()
             self.load_admin_citas()
             self.load_admin_barberos()
@@ -486,6 +495,20 @@ class MainWindow(QMainWindow):
             self.color_calendar_dates()
             self.load_admin_citas()
 
+    def admin_eliminar_canceladas(self):
+        """Eliminar todas las citas canceladas permanentemente"""
+        reply = QMessageBox.question(self, "Confirmar Eliminación", 
+            "¿Estás seguro que deseas eliminar permanentemente TODAS las citas canceladas del sistema?\nEsta acción no se puede deshacer.",
+            QMessageBox.Yes | QMessageBox.No, QMessageBox.No)
+        
+        if reply == QMessageBox.Yes:
+            success, cantidad = database.delete_canceled_citas()
+            if success:
+                QMessageBox.information(self, "Éxito", f"Se han eliminado {cantidad} citas canceladas del sistema.")
+            else:
+                QMessageBox.warning(self, "Error", "Ocurrió un error al eliminar las citas.")
+            self.load_admin_citas()
+
     # --- Admin: Gestión de Barberos ---
 
     def load_admin_barberos(self):
@@ -570,17 +593,50 @@ class MainWindow(QMainWindow):
     # --- Admin: Gestión de Cortes ---
 
     def load_barbero_combo(self):
-        """Cargar el combo de barberos para asociar cortes"""
-        combo = self.page_admin.cmbCorteBarbero
-        combo.clear()
-        combo.addItem("Genérico (todos los barberos)", None)
+        """Cargar la lista de barberos para asociar cortes (Selección múltiple en ComboBox)"""
+        combo = self.page_admin.cmbCorteBarberos
+        view = QListView(combo)
+        view.setObjectName("comboListView")
+        view.setStyleSheet("""
+            QListView {
+                background-color: #FFFFFF;
+                color: #1E1E2E;
+                selection-background-color: #F3F4F6;
+                selection-color: #1E1E2E;
+                border: 1px solid #E2D8CD;
+                outline: none;
+            }
+            QListView::item {
+                padding: 8px;
+                min-height: 25px;
+                color: #1E1E2E;
+                background-color: transparent;
+            }
+            QListView::item:hover {
+                background-color: #F3F4F6;
+            }
+        """)
+        combo.setView(view)
+        
+        model = QStandardItemModel()
+        combo.setModel(model)
+        
+        item_gen = QStandardItem("Genérico (todos los barberos)")
+        item_gen.setFlags(Qt.ItemIsUserCheckable | Qt.ItemIsEnabled)
+        item_gen.setData(Qt.Unchecked, Qt.CheckStateRole)
+        item_gen.setData(None, Qt.UserRole)
+        model.appendRow(item_gen)
         
         barberos = database.get_barberos()
         for b in barberos:
-            combo.addItem(b[1], b[0])  # nombre, id
+            item = QStandardItem(b[1])  # nombre
+            item.setFlags(Qt.ItemIsUserCheckable | Qt.ItemIsEnabled)
+            item.setData(Qt.Unchecked, Qt.CheckStateRole)
+            item.setData(b[0], Qt.UserRole)
+            model.appendRow(item)
 
     def load_admin_cortes(self):
-        """Cargar la lista de cortes en el panel de gestión"""
+        """Cargar la lista de cortes en el panel de gestión, agrupados por nombre y precio"""
         layout = self.page_admin.layoutCortesList
         self.clear_layout(layout)
         
@@ -591,30 +647,43 @@ class MainWindow(QMainWindow):
             lbl.setStyleSheet("color: #9CA3AF; font-size: 13px;")
             layout.addWidget(lbl)
             return
-        
-        for c in cortes:
-            id_c, nombre, precio, barbero_name = c
             
+        # Agrupar por (nombre, precio)
+        grupos = {}
+        for c in cortes:
+            id_c, nombre, precio, barbero_name, barbero_id = c
+            key = (nombre, precio)
+            if key not in grupos:
+                grupos[key] = []
+            grupos[key].append({"id": id_c, "b_name": barbero_name, "b_id": barbero_id})
+            
+        for (nombre, precio), barberos_list in grupos.items():
             card = QFrame()
             card.setProperty("cssClass", "AdminItemCard")
-            hbox = QHBoxLayout(card)
-            hbox.setContentsMargins(10, 6, 10, 6)
+            vbox = QVBoxLayout(card)
+            vbox.setContentsMargins(10, 8, 10, 8)
             
-            info = QVBoxLayout()
             lbl_name = QLabel(nombre)
             lbl_name.setStyleSheet("font-weight: bold; font-size: 14px;")
-            lbl_detail = QLabel(f"RD$ {precio} • Barbero: {barbero_name}")
+            b_names = [b["b_name"] for b in barberos_list]
+            lbl_detail = QLabel(f"RD$ {precio} • Barberos: {', '.join(b_names)}")
             lbl_detail.setStyleSheet("color: #C8956C; font-size: 12px; font-weight: bold;")
-            info.addWidget(lbl_name)
-            info.addWidget(lbl_detail)
+            lbl_detail.setWordWrap(True)
+            vbox.addWidget(lbl_name)
+            vbox.addWidget(lbl_detail)
+            
+            btn_row = QHBoxLayout()
+            btn_edit = QPushButton("Editar")
+            btn_edit.setProperty("cssClass", "btnSecondary")
+            btn_edit.clicked.connect(lambda checked, n=nombre, p=precio, bl=barberos_list: self.admin_edit_corte(n, p, bl))
             
             btn_del = QPushButton("Eliminar")
             btn_del.setProperty("cssClass", "btnDelete")
-            btn_del.setFixedWidth(80)
-            btn_del.clicked.connect(lambda checked, cid=id_c, cname=nombre: self.admin_delete_corte(cid, cname))
+            btn_del.clicked.connect(lambda checked, n=nombre, p=precio: self.admin_delete_corte_grupo(n, p))
             
-            hbox.addLayout(info, 1)
-            hbox.addWidget(btn_del)
+            btn_row.addWidget(btn_edit)
+            btn_row.addWidget(btn_del)
+            vbox.addLayout(btn_row)
             layout.addWidget(card)
 
     def admin_add_corte(self):
@@ -634,28 +703,108 @@ class MainWindow(QMainWindow):
             QMessageBox.warning(self, "Error", "El precio debe ser un número positivo.")
             return
         
-        # Obtener barbero seleccionado del combo
-        combo = self.page_admin.cmbCorteBarbero
-        barbero_id = combo.currentData()
+        # Obtener barberos seleccionados del combo model
+        combo = self.page_admin.cmbCorteBarberos
+        model = combo.model()
+        selected_barberos = []
+        for i in range(model.rowCount()):
+            item = model.item(i)
+            if item.checkState() == Qt.Checked:
+                selected_barberos.append(item.data(Qt.UserRole))
+                
+        if not selected_barberos:
+            QMessageBox.warning(self, "Error", "Debes seleccionar al menos un barbero (o Genérico).")
+            return
         
-        result = database.add_corte(nombre, precio, barbero_id)
-        if result:
-            QMessageBox.information(self, "Éxito", f"Corte '{nombre}' agregado correctamente.")
+        success_count = 0
+        for barbero_id in selected_barberos:
+            result = database.add_corte(nombre, precio, barbero_id)
+            if result:
+                success_count += 1
+                
+        if success_count > 0:
+            QMessageBox.information(self, "Éxito", f"Corte '{nombre}' agregado a {success_count} barbero(s).")
             self.page_admin.txtCorteNombre.clear()
             self.page_admin.txtCortePrecio.clear()
-            self.page_admin.cmbCorteBarbero.setCurrentIndex(0)
+            for i in range(model.rowCount()):
+                model.item(i).setCheckState(Qt.Unchecked)
             self.load_admin_cortes()
         else:
             QMessageBox.warning(self, "Error", "No se pudo agregar el corte.")
 
-    def admin_delete_corte(self, id_corte, nombre):
-        """Eliminar un corte con confirmación"""
+    def admin_edit_corte(self, nombre, precio, barberos_list):
+        """Modificar a qué barberos pertenece un corte"""
+        dialog = QDialog(self)
+        dialog.setWindowTitle("Editar Corte")
+        dialog.setMinimumWidth(320)
+        layout = QVBoxLayout(dialog)
+        
+        layout.addWidget(QLabel(f"<b>Corte:</b> {nombre}"))
+        layout.addWidget(QLabel(f"<b>Precio:</b> RD$ {precio}"))
+        layout.addWidget(QLabel("Selecciona los barberos:"))
+        
+        list_widget = QListWidget()
+        list_widget.setObjectName("listCorteBarberos") # Reusar estilos
+        layout.addWidget(list_widget)
+        
+        current_barbero_ids = [b["b_id"] for b in barberos_list]
+        
+        item_gen = QListWidgetItem("Genérico (todos los barberos)")
+        item_gen.setData(Qt.UserRole, None)
+        item_gen.setFlags(item_gen.flags() | Qt.ItemIsUserCheckable)
+        item_gen.setCheckState(Qt.Checked if None in current_barbero_ids else Qt.Unchecked)
+        list_widget.addItem(item_gen)
+        
+        barberos = database.get_barberos()
+        for b in barberos:
+            item = QListWidgetItem(b[1])
+            item.setData(Qt.UserRole, b[0])
+            item.setFlags(item.flags() | Qt.ItemIsUserCheckable)
+            item.setCheckState(Qt.Checked if b[0] in current_barbero_ids else Qt.Unchecked)
+            list_widget.addItem(item)
+            
+        btn_layout = QHBoxLayout()
+        btn_save = QPushButton("Guardar Cambios")
+        btn_save.setProperty("cssClass", "btnAction")
+        btn_cancel = QPushButton("Cancelar")
+        btn_cancel.setProperty("cssClass", "btnSecondary")
+        
+        btn_layout.addWidget(btn_cancel)
+        btn_layout.addWidget(btn_save)
+        layout.addLayout(btn_layout)
+        
+        btn_cancel.clicked.connect(dialog.reject)
+        
+        def save_changes():
+            new_barbero_ids = []
+            for i in range(list_widget.count()):
+                item = list_widget.item(i)
+                if item.checkState() == Qt.Checked:
+                    new_barbero_ids.append(item.data(Qt.UserRole))
+                    
+            if not new_barbero_ids:
+                QMessageBox.warning(dialog, "Error", "Debes seleccionar al menos un barbero (o Genérico).")
+                return
+                
+            database.delete_corte_by_name_price(nombre, precio)
+            for b_id in new_barbero_ids:
+                database.add_corte(nombre, precio, b_id)
+            dialog.accept()
+            
+        btn_save.clicked.connect(save_changes)
+        
+        if dialog.exec() == QDialog.Accepted:
+            QMessageBox.information(self, "Actualizado", "Corte actualizado correctamente.")
+            self.load_admin_cortes()
+
+    def admin_delete_corte_grupo(self, nombre, precio):
+        """Eliminar todos los registros de un corte con confirmación"""
         reply = QMessageBox.question(self, "Confirmar Eliminación",
-            f"¿Seguro que deseas eliminar el corte '{nombre}'?",
+            f"¿Seguro que deseas eliminar el corte '{nombre}' de todos los barberos asignados?",
             QMessageBox.Yes | QMessageBox.No, QMessageBox.No)
         
         if reply == QMessageBox.Yes:
-            result = database.delete_Corte(id_corte)
+            result = database.delete_corte_by_name_price(nombre, precio)
             if result:
                 QMessageBox.information(self, "Eliminado", f"Corte '{nombre}' eliminado.")
             else:
@@ -794,13 +943,31 @@ class MainWindow(QMainWindow):
             
         self.page_corte.btnNext.setEnabled(True)
 
+    # --- Resumen y Confirmación ---
+    
+    def color_client_calendar_dates(self):
+        """Asegurar que la fecha seleccionada en el calendario del cliente se resalte siempre"""
+        calendar = self.page_fecha.calendarWidget
+        selected_date = calendar.selectedDate()
+        
+        calendar.setDateTextFormat(QDate(), QTextCharFormat())
+        
+        fmt = QTextCharFormat()
+        fmt.setBackground(QColor("#C8956C"))
+        fmt.setForeground(QColor("#FFFFFF"))
+        fmt.setFontWeight(QFont.Bold)
+        calendar.setDateTextFormat(selected_date, fmt)
+
     def update_horarios(self):
         fecha = self.page_fecha.calendarWidget.selectedDate().toString("yyyy-MM-dd")
         layout = self.page_fecha.verticalLayoutHorarios
         self.clear_layout(layout)
         
-        # Generar horas de 9:00 AM a 7:00 PM cada 1h
-        horas = [f"{h:02d}:00" for h in range(9, 19)]
+        # Generar horas de 9:00 AM a 7:00 PM cada 15 min
+        horas = []
+        for h in range(9, 19):
+            for m in (0, 15, 30, 45):
+                horas.append(f"{h:02d}:{m:02d}")
         
         ocupados = database.get_available_horarios(self.appointment_data["id_barbero"], fecha)
         
@@ -812,6 +979,7 @@ class MainWindow(QMainWindow):
             if hora in ocupados:
                 btn.setEnabled(False)
                 btn.setText(f"{hora} (Ocupado)")
+                btn.setStyleSheet("background-color: #E5E7EB; color: #9CA3AF; border: 1px solid #D1D5DB; font-style: italic;")
             else:
                 btn.clicked.connect(lambda checked, h=hora, b=btn: self.select_horario(h, b))
                 

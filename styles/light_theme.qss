@@ -382,3 +382,256 @@ QLabel[cssClass="statusCancelada"] {
     color: #EF4444;
     font-weight: bold;
 }
+
+/* Dialog Style */
+QDialog {
+    background-color: #FAF7F2;
+}
+
+QDialog QLabel {
+    color: #1E1E2E;
+    font-size: 14px;
+}
+
+/* ListWidget for Multi-select Barbers */
+QListWidget#listCorteBarberos {
+    background-color: #FFFFFF;
+    border: 1px solid #D1D5DB;
+    border-radius: 8px;
+    padding: 4px;
+    outline: none;
+    color: #1E1E2E;
+    font-size: 14px;
+}
+
+QListWidget#listCorteBarberos::item {
+    padding: 6px;
+    border-radius: 4px;
+}
+    selection-color: #FFFFFF;
+    font-size: 13px;
+    outline: none;
+}
+
+QCalendarWidget QAbstractItemView:disabled {
+    color: #D1D5DB;
+}
+
+/* Month Dropdown */
+QCalendarWidget QMenu {
+    background-color: #FFFFFF;
+    border: 1px solid #E2D8CD;
+    border-radius: 8px;
+    padding: 4px;
+}
+
+QCalendarWidget QMenu::item:selected {
+    background-color: #C8956C;
+    color: #FFFFFF;
+    border-radius: 4px;
+}
+
+/* Year Spinbox */
+QCalendarWidget QSpinBox {
+    background-color: #3A465C;
+    color: #FFFFFF;
+    border: none;
+    border-radius: 6px;
+    padding: 4px 8px;
+    font-size: 14px;
+    font-weight: bold;
+}
+
+QCalendarWidget QSpinBox::up-button, 
+QCalendarWidget QSpinBox::down-button {
+    subcontrol-origin: border;
+    width: 18px;
+    border: none;
+    background-color: transparent;
+}
+
+/* Scroll Area */
+QScrollArea {
+    border: none;
+    background-color: transparent;
+}
+
+QScrollArea > QWidget > QWidget {
+    background-color: transparent;
+}
+
+/* ===== ADMIN PANEL STYLES ===== */
+
+/* Admin Tab Buttons */
+QPushButton#btnTabCitas, QPushButton#btnTabGestion {
+    background-color: transparent;
+    color: #6B7280;
+    border: 1px solid #E2D8CD;
+    border-radius: 8px;
+    padding: 12px 24px;
+    font-size: 15px;
+    font-weight: bold;
+}
+
+QPushButton#btnTabCitas:hover, QPushButton#btnTabGestion:hover {
+    background-color: #F5F0EB;
+    color: #1E1E2E;
+}
+
+QPushButton#btnTabCitas:checked, QPushButton#btnTabGestion:checked {
+    background-color: #C8956C;
+    color: #FFFFFF;
+    border: 2px solid #C8956C;
+}
+
+/* Admin Section Titles */
+QLabel#lblBarberosTitle, QLabel#lblCortesTitle {
+    font-size: 20px;
+    font-weight: bold;
+    color: #1E1E2E;
+    padding: 4px 0px;
+}
+
+/* Admin Confirm Button (Green) */
+QPushButton[cssClass="btnConfirm"] {
+    background-color: #10B981;
+    color: #FFFFFF;
+    border: none;
+    border-radius: 6px;
+    padding: 8px 16px;
+    font-size: 13px;
+    font-weight: bold;
+}
+
+QPushButton[cssClass="btnConfirm"]:hover {
+    background-color: #059669;
+}
+
+/* Admin Cancel/Reject Button (Red) */
+QPushButton[cssClass="btnCancel"] {
+    background-color: #EF4444;
+    color: #FFFFFF;
+    border: none;
+    border-radius: 6px;
+    padding: 8px 16px;
+    font-size: 13px;
+    font-weight: bold;
+}
+
+QPushButton[cssClass="btnCancel"]:hover {
+    background-color: #DC2626;
+}
+
+/* Admin Delete Button */
+QPushButton[cssClass="btnDelete"] {
+    background-color: transparent;
+    color: #EF4444;
+    border: 1px solid #EF4444;
+    border-radius: 6px;
+    padding: 6px 12px;
+    font-size: 12px;
+    font-weight: bold;
+}
+
+QPushButton[cssClass="btnDelete"]:hover {
+    background-color: #FEF2F2;
+}
+
+/* Admin Cita Card */
+QFrame[cssClass="AdminCitaCard"] {
+    background-color: #FFFFFF;
+    border: 1px solid #E2D8CD;
+    border-radius: 10px;
+    padding: 8px;
+}
+
+QFrame[cssClass="AdminCitaCard"]:hover {
+    border: 1px solid #C8956C;
+    background-color: #FFFBF5;
+}
+
+/* Admin Item Card (barbero/corte list) */
+QFrame[cssClass="AdminItemCard"] {
+    background-color: #FFFFFF;
+    border: 1px solid #E2D8CD;
+    border-radius: 8px;
+    padding: 6px;
+}
+
+QFrame[cssClass="AdminItemCard"]:hover {
+    border: 1px solid #C8956C;
+}
+
+/* Status Labels */
+QLabel[cssClass="statusPendiente"] {
+    color: #C8956C;
+    font-weight: bold;
+}
+
+QLabel[cssClass="statusConfirmada"] {
+    color: #10B981;
+    font-weight: bold;
+}
+
+QLabel[cssClass="statusCancelada"] {
+    color: #EF4444;
+    font-weight: bold;
+}
+
+/* Dialog Style */
+QDialog {
+    background-color: #FAF7F2;
+}
+
+QDialog QLabel {
+    color: #1E1E2E;
+    font-size: 14px;
+}
+
+/* ListWidget for Multi-select Barbers */
+QListWidget#listCorteBarberos {
+    background-color: #FFFFFF;
+    border: 1px solid #D1D5DB;
+    border-radius: 8px;
+    padding: 4px;
+    outline: none;
+    color: #1E1E2E;
+    font-size: 14px;
+}
+
+QListWidget#listCorteBarberos::item {
+    padding: 6px;
+    border-radius: 4px;
+}
+
+QListWidget#listCorteBarberos::item:hover {
+    background-color: #F3F4F6;
+}
+
+QListWidget#listCorteBarberos::item:selected {
+    background-color: transparent;
+    color: #1E1E2E;
+}
+
+/* ComboBox Dropdown Menu */
+QListView#comboListView {
+    background-color: #FFFFFF;
+    color: #1E1E2E;
+    selection-background-color: #F3F4F6;
+    selection-color: #1E1E2E;
+    border: 1px solid #E2D8CD;
+    border-radius: 8px;
+    padding: 4px;
+    outline: none;
+}
+
+QListView#comboListView::item {
+    padding: 8px;
+    min-height: 25px;
+    background-color: transparent;
+    color: #1E1E2E;
+}
+
+QListView#comboListView::item:hover {
+    background-color: #F3F4F6;
+}

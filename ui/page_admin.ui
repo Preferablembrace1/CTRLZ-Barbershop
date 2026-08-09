@@ -83,6 +83,13 @@
             </widget>
            </item>
            <item>
+            <widget class="QPushButton" name="btnEliminarCanceladas">
+             <property name="text"><string>🗑️ Eliminar Canceladas</string></property>
+             <property name="minimumSize"><size><width>0</width><height>40</height></size></property>
+             <property name="cssClass" stdset="0"><string>btnDelete</string></property>
+            </widget>
+           </item>
+           <item>
             <spacer name="spacerCalendarInfo">
              <property name="orientation"><enum>Qt::Vertical</enum></property>
             </spacer>
@@ -191,7 +198,10 @@
           </widget>
          </item>
          <item>
-          <widget class="QComboBox" name="cmbCorteBarbero"/>
+          <widget class="QComboBox" name="cmbCorteBarberos">
+           <property name="placeholderText"><string>Seleccionar barberos...</string></property>
+           <property name="minimumHeight"><number>40</number></property>
+          </widget>
          </item>
          <item>
           <widget class="QPushButton" name="btnAddCorte">

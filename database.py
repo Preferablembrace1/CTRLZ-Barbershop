@@ -324,6 +324,22 @@ def cancel_cita(id_cita):
         conn.close()
         return False, str(e)
 
+def delete_canceled_citas():
+    """Eliminar permanentemente de la base de datos todas las citas canceladas"""
+    conn = connect_DB()
+    cursor = conn.cursor()
+    try:
+        cursor.execute("DELETE FROM citas WHERE estado = 'cancelada'")
+        eliminados = cursor.rowcount
+        conn.commit()
+        conn.close()
+        return True, eliminados
+    except sqlite3.Error as e:
+        print(f"Error al eliminar citas canceladas: {e}")
+        conn.rollback()
+        conn.close()
+        return False, 0
+
 def complete_cita(id_cita):
     """Completar una cita por ID"""
     conn = connect_DB()
@@ -353,7 +369,7 @@ def get_available_horarios(id_barbero, fecha):
     conn = connect_DB()
     cursor = conn.cursor()
     try:
-        cursor.execute("SELECT hora FROM citas WHERE barbero_id = ? AND fecha = ? AND estado = 'pendiente'", (id_barbero, fecha))
+        cursor.execute("SELECT hora FROM citas WHERE barbero_id = ? AND fecha = ? AND estado IN ('pendiente', 'confirmada')", (id_barbero, fecha))
         horarios = cursor.fetchall()
         conn.close()
         return [hora[0] for hora in horarios]  # Convertir tuplas a lista de strings
@@ -420,19 +436,35 @@ def confirm_cita(id_cita):
         return False, str(e)
 
 def get_all_cortes_with_barbero():
-    """Obtener todos los cortes con el nombre del barbero asociado"""
+    """Obtener todos los cortes con el nombre del barbero asociado y su ID"""
     conn = connect_DB()
     cursor = conn.cursor()
     try:
         cursor.execute("""SELECT c.id, c.nombre, c.precio, 
-                          COALESCE(b.nombre, 'Genérico') as barbero
+                          COALESCE(b.nombre, 'Genérico') as barbero, c.barbero_id
                           FROM cortes c 
                           LEFT JOIN barberos b ON c.barbero_id = b.id 
-                          ORDER BY c.id""")
+                          ORDER BY c.nombre, c.precio""")
         cortes = cursor.fetchall()
         conn.close()
         return cortes
     except sqlite3.Error as e:
         print(f"Error al obtener los cortes: {e}")
         conn.close()
-        return []
+        return []
+
+def delete_corte_by_name_price(nombre, precio):
+    """Eliminar todos los registros de un corte con un nombre y precio específicos"""
+    conn = connect_DB()
+    cursor = conn.cursor()
+    try:
+        cursor.execute("DELETE FROM cortes WHERE nombre=? AND precio=?", (nombre, precio))
+        conn.commit()
+        eliminados = cursor.rowcount
+        conn.close()
+        return eliminados > 0
+    except sqlite3.Error as e:
+        print(f"Error al eliminar grupo de cortes: {e}")
+        conn.rollback()
+        conn.close()
+        return False
