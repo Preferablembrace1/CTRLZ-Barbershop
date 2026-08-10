@@ -1,13 +1,16 @@
 import sqlite3
 import os 
 
-#Fuad, hice esto con ayuda de la IA, obvio, pero traté de entenderlo y dejar comentarios utiles para que
-#entiendas como funciona el codigo un poco
+DB_FOLDER = "db"
+if not os.path.exists(DB_FOLDER):
+    os.makedirs(DB_FOLDER)
+
 DB_NAME = "CTRLZ_BarberShop.db"
+DB_PATH = os.path.join(DB_FOLDER, DB_NAME)
 
 def connect_DB():
     """Establecer conexión con la base de datos"""
-    return sqlite3.connect(DB_NAME)
+    return sqlite3.connect(DB_PATH)
 
 def create_table():
     """Crear tabla en la base de datos si no existe"""
@@ -467,4 +470,4 @@ def delete_corte_by_name_price(nombre, precio):
         print(f"Error al eliminar grupo de cortes: {e}")
         conn.rollback()
         conn.close()
-        return False
+        return False

@@ -7,6 +7,7 @@ from PySide6.QtWidgets import QApplication
 from app import MainWindow
 from database import create_table
 from seed_data import seed
+from PySide6.QtGui import QIcon
 
 
 def main():
@@ -27,8 +28,9 @@ def main():
     # Iniciar ventana principal
     window = MainWindow()
     window.resize(900, 700)
+    window.setWindowTitle("CTRLZ Barbershop")
+    window.setWindowIcon(QIcon("logo.ico"))
     window.show()
-
     sys.exit(app.exec())
 
 

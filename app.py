@@ -821,12 +821,15 @@ class MainWindow(QMainWindow):
         if not nombre or not telefono or not correo:
             QMessageBox.warning(self, "Error", "Por favor completa todos los campos.")
             return
-            
+        
         email_regex = r'^[\w\.-]+@[\w\.-]+\.\w+$'
+        telefono_regex = r'^(809|829|849)-?\d{3}-?\d{4}$'
         if not re.match(email_regex, correo):
             QMessageBox.warning(self, "Error", "Correo electrónico inválido.")
             return
-            
+        if not re.match(telefono_regex, telefono):
+            QMessageBox.warning(self, "Error", "Teléfono inválido.")
+            return  
         self.appointment_data["nombre"] = nombre
         self.appointment_data["telefono"] = telefono
         self.appointment_data["correo"] = correo
@@ -966,9 +969,9 @@ class MainWindow(QMainWindow):
         # Generar horas de 9:00 AM a 7:00 PM cada 15 min
         horas = []
         for h in range(9, 19):
-            for m in (0, 15, 30, 45):
-                horas.append(f"{h:02d}:{m:02d}")
-        
+            # for m in (0, 15, 30, 45): < por si se requiere otro intervalo 
+            horas.append(f"{h:02d}:00")
+#horas.append(f"{h:02d}:{m:02d}") < por si se requiere otro intervalo
         ocupados = database.get_available_horarios(self.appointment_data["id_barbero"], fecha)
         
         self.horario_buttons = []
@@ -1065,7 +1068,7 @@ class MainWindow(QMainWindow):
         cita = database.get_cita_by_id(int(codigo))
         if cita:
             id_cita, cliente, barbero, corte, fecha, hora, estado, precio = cita
-            color = "#C8956C" if estado == "pendiente" else ("#10B981" if estado == "completada" else "#EF4444")
+            color = "#C8956C" if estado == "pendiente" else ("#10B981" if estado == "completada" or estado == "confirmada" else "#EF4444")
             
             res = f"""
             <h3 style='color: #1E1E2E;'>Detalles de la Cita #{id_cita}</h3>
