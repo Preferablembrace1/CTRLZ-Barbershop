@@ -1068,7 +1068,7 @@ class MainWindow(QMainWindow):
         cita = database.get_cita_by_id(int(codigo))
         if cita:
             id_cita, cliente, barbero, corte, fecha, hora, estado, precio = cita
-            color = "#C8956C" if estado == "pendiente" else ("#10B981" if estado == "completada" else "#EF4444")
+            color = "#C8956C" if estado == "pendiente" else ("#10B981" if estado == "completada" or estado == "confirmada" else "#EF4444")
             
             res = f"""
             <h3 style='color: #1E1E2E;'>Detalles de la Cita #{id_cita}</h3>
