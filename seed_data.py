@@ -11,10 +11,10 @@ def seed():
     # Sembrar barberos de prueba
     if not get_barberos():
         barberos = [
-            ("Carlos 'El Chino'", "chino@ctrlz.com", "Cortes clásicos y degradados"),
-            ("Miguel 'El Tigre'", "tigre@ctrlz.com", "Diseños y líneas"),
-            ("José 'Yordy'", "yordy@ctrlz.com", "Barba y afeitado"),
-            ("Rafael 'El Flaco'", "flaco@ctrlz.com", "Cortes modernos"),
+            ("Carlos Rodriguez", "chino@ctrlz.com", "Cortes clásicos y degradados"),
+            ("Miguel 'El Tigre' Duran", "tigre@ctrlz.com", "Diseños y líneas"),
+            ("José Antonio Cabral", "yordy@ctrlz.com", "Barba y afeitado"),
+            ("Rafael Acosta", "flaco@ctrlz.com", "Cortes modernos"),
         ]
         for nombre, email, especialidad in barberos:
             add_barbero(nombre, email, especialidad)
